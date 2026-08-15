@@ -17,8 +17,9 @@ public class PocketPayDbContext
 
     public DbSet<Wallet> Wallets => Set<Wallet>();
 
-    public DbSet<WalletTransaction> WalletTransactions =>
-        Set<WalletTransaction>();
+    public DbSet<WalletTransaction> WalletTransactions =>Set<WalletTransaction>();
+
+    public DbSet<RefreshToken> RefreshTokens =>Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -70,6 +71,24 @@ public class PocketPayDbContext
                 .WithMany()
                 .HasForeignKey(t => t.WalletId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Token)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.HasIndex(x => x.Token)
+                .IsUnique();
+
+            entity.Property(x => x.ExpiresAt)
+                .IsRequired();
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
         });
     }
 }

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PocketPay.Infrastructure.Data;
 using PocketPay.Infrastructure.Identity;
+using PocketPay.Application.Interfaces;
+using PocketPay.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +32,7 @@ builder.Services
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<PocketPayDbContext>()
     .AddSignInManager();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
