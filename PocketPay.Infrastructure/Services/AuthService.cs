@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PocketPay.Application.DTOs;
 using PocketPay.Application.Interfaces;
+using PocketPay.Domain.Entities;
 using PocketPay.Infrastructure.Identity;
 
 namespace PocketPay.Infrastructure.Services;
@@ -8,10 +9,14 @@ namespace PocketPay.Infrastructure.Services;
 public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IJwtService _jwtService;
 
-    public AuthService(UserManager<ApplicationUser> userManager)
+    public AuthService(
+        UserManager<ApplicationUser> userManager,
+        IJwtService jwtService)
     {
         _userManager = userManager;
+        _jwtService = jwtService;
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -72,11 +77,21 @@ public class AuthService : IAuthService
             throw new Exception("Invalid email or password.");
         }
 
+        var accessToken = _jwtService.GenerateAccessToken(
+            user.Id,
+            user.Email!,
+            user.FullName);
+
+        var refreshToken = _jwtService.GenerateRefreshToken();
+
         return new AuthResponse
         {
             UserId = user.Id.ToString(),
             FullName = user.FullName,
             Email = user.Email!,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15),
             Message = "Login successful."
         };
     }

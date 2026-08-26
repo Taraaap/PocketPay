@@ -32,7 +32,11 @@ builder.Services
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<PocketPayDbContext>()
     .AddSignInManager();
+
+
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 
 var app = builder.Build();
 
