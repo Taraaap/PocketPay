@@ -13,6 +13,10 @@ public class AuthService : IAuthService
     private readonly IJwtService _jwtService;
     private readonly PocketPayDbContext _dbContext;
 
+    private string GenerateWalletNumber()
+    {
+        return "PP" + Random.Shared.Next(10000000, 99999999);
+    }
     public AuthService(
         UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
@@ -54,6 +58,20 @@ public class AuthService : IAuthService
 
             throw new Exception(errors);
         }
+
+        var wallet = new Wallet
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            WalletNumber = GenerateWalletNumber(),
+            Balance = 0.00m,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _dbContext.Wallets.Add(wallet);
+
+        await _dbContext.SaveChangesAsync();
 
         return new AuthResponse
         {
