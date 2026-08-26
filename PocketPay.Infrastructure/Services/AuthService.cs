@@ -2,6 +2,7 @@
 using PocketPay.Application.DTOs;
 using PocketPay.Application.Interfaces;
 using PocketPay.Domain.Entities;
+using PocketPay.Infrastructure.Data;
 using PocketPay.Infrastructure.Identity;
 
 namespace PocketPay.Infrastructure.Services;
@@ -10,13 +11,17 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
+    private readonly PocketPayDbContext _dbContext;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
-        IJwtService jwtService)
+        IJwtService jwtService,
+        PocketPayDbContext dbContext)
     {
         _userManager = userManager;
         _jwtService = jwtService;
+         _dbContext = dbContext;
+
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -83,6 +88,19 @@ public class AuthService : IAuthService
             user.FullName);
 
         var refreshToken = _jwtService.GenerateRefreshToken();
+
+        var refreshTokenEntity = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            Token = refreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _dbContext.RefreshTokens.Add(refreshTokenEntity);
+
+        await _dbContext.SaveChangesAsync();
 
         return new AuthResponse
         {
