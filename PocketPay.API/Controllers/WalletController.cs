@@ -117,4 +117,46 @@ public class WalletController : ControllerBase
             transactionId = transaction.Id
         });
     }
+
+    [HttpGet("transactions")]
+    public async Task<IActionResult> GetTransactions()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                          ?? User.FindFirstValue("sub");
+
+        if (string.IsNullOrEmpty(userIdClaim) ||
+            !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var wallet = await _dbContext.Wallets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.UserId == userId);
+
+        if (wallet == null)
+        {
+            return NotFound(new
+            {
+                message = "Wallet not found."
+            });
+        }
+
+        var transactions = await _dbContext.WalletTransactions
+            .AsNoTracking()
+            .Where(t => t.WalletId == wallet.Id)
+            .OrderByDescending(t => t.CreatedAt)
+            .Select(t => new
+            {
+                t.Id,
+                t.Amount,
+                t.Type,
+                t.Status,
+                t.Reference,
+                t.CreatedAt
+            })
+            .ToListAsync();
+
+        return Ok(transactions);
+    }
 }
