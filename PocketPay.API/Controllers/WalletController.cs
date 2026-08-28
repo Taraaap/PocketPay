@@ -282,10 +282,19 @@ public class WalletController : ControllerBase
                 newBalance = senderWallet.Balance
             });
         }
-        catch
+      
+        catch (DbUpdateConcurrencyException)
         {
             await transaction.RollbackAsync();
 
+            return Conflict(new
+            {
+                message = "The wallet was updated by another transaction. Please try again."
+            });
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
             throw;
         }
     }

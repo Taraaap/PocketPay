@@ -44,6 +44,8 @@ public class PocketPayDbContext
 
             entity.HasIndex(w => w.WalletNumber)
                 .IsUnique();
+            builder.Entity<Wallet>().Property(w => w.RowVersion)
+                .IsRowVersion();
         });
 
         builder.Entity<WalletTransaction>(entity =>
