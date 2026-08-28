@@ -159,4 +159,134 @@ public class WalletController : ControllerBase
 
         return Ok(transactions);
     }
+
+    [HttpPost("transfer")]
+    public async Task<IActionResult> Transfer(TransferRequest request)
+    {
+        if (request.Amount <= 0)
+        {
+            return BadRequest(new
+            {
+                message = "Transfer amount must be greater than zero."
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(request.ReceiverWalletNumber))
+        {
+            return BadRequest(new
+            {
+                message = "Receiver wallet number is required."
+            });
+        }
+
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                          ?? User.FindFirstValue("sub");
+
+        if (string.IsNullOrEmpty(userIdClaim) ||
+            !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var senderWallet = await _dbContext.Wallets
+            .FirstOrDefaultAsync(w => w.UserId == userId);
+
+        if (senderWallet == null)
+        {
+            return NotFound(new
+            {
+                message = "Sender wallet not found."
+            });
+        }
+
+        var receiverWallet = await _dbContext.Wallets
+            .FirstOrDefaultAsync(w =>
+                w.WalletNumber == request.ReceiverWalletNumber);
+
+        if (receiverWallet == null)
+        {
+            return NotFound(new
+            {
+                message = "Receiver wallet not found."
+            });
+        }
+
+        if (senderWallet.Id == receiverWallet.Id)
+        {
+            return BadRequest(new
+            {
+                message = "You cannot transfer money to your own wallet."
+            });
+        }
+
+        if (!senderWallet.IsActive || !receiverWallet.IsActive)
+        {
+            return BadRequest(new
+            {
+                message = "One of the wallets is inactive."
+            });
+        }
+
+        if (senderWallet.Balance < request.Amount)
+        {
+            return BadRequest(new
+            {
+                message = "Insufficient balance."
+            });
+        }
+
+        await using var transaction =
+            await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            senderWallet.Balance -= request.Amount;
+            receiverWallet.Balance += request.Amount;
+
+            var reference = Guid.NewGuid().ToString();
+
+            var senderTransaction = new WalletTransaction
+            {
+                Id = Guid.NewGuid(),
+                WalletId = senderWallet.Id,
+                Amount = request.Amount,
+                Type = "Transfer",
+                Status = "Completed",
+                Reference = reference,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var receiverTransaction = new WalletTransaction
+            {
+                Id = Guid.NewGuid(),
+                WalletId = receiverWallet.Id,
+                Amount = request.Amount,
+                Type = "Transfer",
+                Status = "Completed",
+                Reference = reference,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _dbContext.WalletTransactions.Add(senderTransaction);
+            _dbContext.WalletTransactions.Add(receiverTransaction);
+
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return Ok(new
+            {
+                message = "Transfer successful.",
+                amount = request.Amount,
+                reference,
+                newBalance = senderWallet.Balance
+            });
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+
+            throw;
+        }
+    }
 }
