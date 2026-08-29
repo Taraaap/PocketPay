@@ -11,11 +11,11 @@ using PocketPay.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PocketPayDbContext>(options =>
     options.UseSqlServer(
@@ -37,12 +37,9 @@ builder.Services
     .AddEntityFrameworkStores<PocketPayDbContext>()
     .AddSignInManager();
 
-
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-
-var app = builder.Build();
 
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -58,8 +55,11 @@ var jwtAudience = jwtSettings["Audience"]
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+
+    options.DefaultChallengeScheme =
+        JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -81,10 +81,14 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-// Configure the HTTP request pipeline.
+
+var app = builder.Build();
+
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -92,6 +96,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
