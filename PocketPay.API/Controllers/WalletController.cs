@@ -72,6 +72,14 @@ public class WalletController : ControllerBase
             });
         }
 
+        if (decimal.Round(request.Amount, 2) != request.Amount)
+        {
+            return BadRequest(new
+            {
+                message = "Amount can have a maximum of 2 decimal places."
+            });
+        }
+
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
                           ?? User.FindFirstValue("sub");
 
@@ -168,6 +176,14 @@ public class WalletController : ControllerBase
             return BadRequest(new
             {
                 message = "Transfer amount must be greater than zero."
+            });
+        }
+
+        if (decimal.Round(request.Amount, 2) != request.Amount)
+        {
+            return BadRequest(new
+            {
+                message = "Amount can have a maximum of 2 decimal places."
             });
         }
 

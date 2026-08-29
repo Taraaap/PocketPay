@@ -30,6 +30,21 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.FullName))
+        {
+            throw new Exception("Full name is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            throw new Exception("Email is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Password))
+        {
+            throw new Exception("Password is required.");
+        }
+
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
 
         if (existingUser != null)
