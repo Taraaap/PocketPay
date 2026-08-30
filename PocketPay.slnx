@@ -3,4 +3,7 @@
   <Project Path="PocketPay.Application/PocketPay.Application.csproj" Id="35e239a7-7de1-47e2-ade0-0b5432f7e962" />
   <Project Path="PocketPay.Domain/PocketPay.Domain.csproj" Id="4d869d2c-38bb-4db2-a1de-53dc9cad0d1f" />
   <Project Path="PocketPay.Infrastructure/PocketPay.Infrastructure.csproj" Id="c96b45eb-9bef-41e6-90cb-e2ca6403f24c" />
+  <Project Path="PocketPay.Mobile/PocketPay.Mobile.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>
