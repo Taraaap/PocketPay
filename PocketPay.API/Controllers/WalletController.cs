@@ -277,7 +277,7 @@ public class WalletController : ControllerBase
                 Id = Guid.NewGuid(),
                 WalletId = receiverWallet.Id,
                 Amount = request.Amount,
-                Type = "Transfer",
+                Type = "Received",
                 Status = "Completed",
                 Reference = reference,
                 CreatedAt = DateTime.UtcNow
