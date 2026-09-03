@@ -41,7 +41,7 @@ public partial class HomePage : ContentPage
                 new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync(
-                "https://10.0.2.2:7225/api/Wallet");
+                "https://localhost:7225/api/Wallet");
 
             if (!response.IsSuccessStatusCode)
             {
