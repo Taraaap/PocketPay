@@ -20,4 +20,8 @@
         ContentTemplate="{DataTemplate local:DepositPage}"
         Route="DepositPage" />
 
+    <ShellContent
+    Title="Send Money"
+    ContentTemplate="{DataTemplate local:SendMoneyPage}"
+    Route="SendMoneyPage" />
 </Shell>

@@ -28,6 +28,13 @@ public partial class HomePage : ContentPage
         await Shell.Current.GoToAsync("//DepositPage");
     }
 
+    private async void OnSendMoneyClicked(
+    object sender,
+    EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//SendMoneyPage");
+    }
+
     private async Task LoadWallet()
     {
         try
