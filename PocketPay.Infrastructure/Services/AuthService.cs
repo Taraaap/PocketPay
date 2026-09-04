@@ -4,7 +4,7 @@ using PocketPay.Application.Interfaces;
 using PocketPay.Domain.Entities;
 using PocketPay.Infrastructure.Data;
 using PocketPay.Infrastructure.Identity;
-
+using Microsoft.EntityFrameworkCore;
 namespace PocketPay.Infrastructure.Services;
 
 public class AuthService : IAuthService
@@ -146,4 +146,37 @@ public class AuthService : IAuthService
             Message = "Login successful."
         };
     }
+
+    public async Task<AuthResponse> RefreshTokenAsync(string refreshToken)
+    {
+        var token = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == refreshToken);
+
+        if (token == null)
+            throw new Exception("Invalid refresh token.");
+
+        if (token.ExpiresAt <= DateTime.UtcNow)
+            throw new Exception("Refresh token has expired.");
+
+        var user = await _userManager.FindByIdAsync(token.UserId.ToString());
+
+        if (user == null)
+            throw new Exception("User not found.");
+
+        var newAccessToken = _jwtService.GenerateAccessToken(
+            user.Id,
+            user.Email!,
+            user.FullName);
+
+        return new AuthResponse
+        {
+            UserId = user.Id.ToString(),
+            FullName = user.FullName,
+            Email = user.Email!,
+            AccessToken = newAccessToken,
+            RefreshToken = refreshToken,
+            AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15),
+            Message = "Access token refreshed successfully."
+        };
+    }
+
 }
