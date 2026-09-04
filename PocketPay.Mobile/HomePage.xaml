@@ -71,6 +71,12 @@
                 CornerRadius="10" 
                 Clicked="OnTransactionsClicked"/>
 
+            <Button
+                Text="Logout"
+                FontSize="18"
+                HeightRequest="60"
+                Clicked="OnLogoutClicked" />
+
         </VerticalStackLayout>
     </ScrollView>
 

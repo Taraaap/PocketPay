@@ -14,6 +14,18 @@ public partial class DepositPage : ContentPage
         _httpClient = new HttpClient();
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        var token = await SecureStorage.Default.GetAsync("accessToken");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+        }
+    }
+
     private async void OnDepositClicked(
         object sender,
         EventArgs e)

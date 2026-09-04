@@ -18,6 +18,14 @@ public partial class TransactionsPage : ContentPage
     {
         base.OnAppearing();
 
+        var token = await SecureStorage.Default.GetAsync("accessToken");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+            return;
+        }
+
         await LoadTransactions();
     }
 

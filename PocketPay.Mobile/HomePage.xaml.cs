@@ -18,6 +18,14 @@ public partial class HomePage : ContentPage
     {
         base.OnAppearing();
 
+        var token = await SecureStorage.Default.GetAsync("accessToken");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            await Shell.Current.GoToAsync("//MainPage");
+            return;
+        }
+
         await LoadWallet();
     }
 
@@ -93,6 +101,26 @@ public partial class HomePage : ContentPage
                 ex.Message,
                 "OK");
         }
+    }
+
+    private async void OnLogoutClicked(
+    object sender,
+    EventArgs e)
+    {
+        bool confirm = await DisplayAlert(
+            "Logout",
+            "Are you sure you want to logout?",
+            "Yes",
+            "No");
+
+        if (!confirm)
+            return;
+
+        SecureStorage.Default.Remove("accessToken");
+        SecureStorage.Default.Remove("userId");
+        SecureStorage.Default.Remove("refreshToken");
+
+        await Shell.Current.GoToAsync("//MainPage");
     }
 }
 
