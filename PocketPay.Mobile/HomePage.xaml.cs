@@ -21,6 +21,13 @@ public partial class HomePage : ContentPage
         await LoadWallet();
     }
 
+    private async void OnDepositClicked(
+    object sender,
+    EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//DepositPage");
+    }
+
     private async Task LoadWallet()
     {
         try

@@ -56,7 +56,8 @@
             <Button
                 Text="Deposit"
                 HeightRequest="50"
-                CornerRadius="10" />
+                CornerRadius="10"
+                Clicked="OnDepositClicked"/>
 
             <Button
                 Text="Send Money"
