@@ -68,7 +68,8 @@
             <Button
                 Text="Transactions"
                 HeightRequest="50"
-                CornerRadius="10" />
+                CornerRadius="10" 
+                Clicked="OnTransactionsClicked"/>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="PocketPay.Mobile.TransactionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Transactions">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Label
+            Text="Transaction History"
+            FontSize="30"
+            FontAttributes="Bold" />
+
+        <CollectionView
+            x:Name="TransactionsList">
+
+            <CollectionView.EmptyView>
+                <Label
+                    Text="No transactions yet."
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    FontSize="18" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Border
+                        Padding="15"
+                        Margin="0,5"
+                        StrokeShape="RoundRectangle 12">
+
+                        <Grid
+                            ColumnDefinitions="*,Auto"
+                            RowDefinitions="Auto,Auto">
+
+                            <Label
+                                Text="{Binding Type}"
+                                FontSize="17"
+                                FontAttributes="Bold" />
+
+                            <Label
+                                Grid.Row="1"
+                                Text="{Binding Status}"
+                                FontSize="13" />
+
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Amount, StringFormat='Rs. {0:N2}'}"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                HorizontalOptions="End" />
+
+                            <Label
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Text="{Binding CreatedAt, StringFormat='{0:dd MMM yyyy, hh:mm tt}'}"
+                                FontSize="12"
+                                HorizontalOptions="End" />
+
+                        </Grid>
+
+                    </Border>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Button
+            Text="Back to Wallet"
+            Clicked="OnBackClicked" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
