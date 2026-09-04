@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-
+using PocketPay.Mobile.Models;
 namespace PocketPay.Mobile;
 
 public partial class MainPage : ContentPage
@@ -76,7 +76,13 @@ public partial class MainPage : ContentPage
                 "userId",
                 result.UserId);
 
-            
+            if (!string.IsNullOrEmpty(result.RefreshToken))
+            {
+                await SecureStorage.Default.SetAsync(
+                    "refreshToken",
+                    result.RefreshToken);
+            }
+
 
             await Shell.Current.GoToAsync("//HomePage");
         }
@@ -90,19 +96,3 @@ public partial class MainPage : ContentPage
     }
 }
 
-public class LoginResponse
-{
-    public string UserId { get; set; } = string.Empty;
-
-    public string FullName { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
-
-    public string? AccessToken { get; set; }
-
-    public string? RefreshToken { get; set; }
-
-    public DateTime? AccessTokenExpiresAt { get; set; }
-
-    public string Message { get; set; } = string.Empty;
-}
