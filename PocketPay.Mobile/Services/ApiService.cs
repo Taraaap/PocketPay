@@ -1,7 +1,8 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using PocketPay.Mobile;
 using PocketPay.Mobile.Models;
+
 namespace PocketPay.Mobile.Services;
 
 public class ApiService
@@ -26,7 +27,8 @@ public class ApiService
 
         if (string.IsNullOrEmpty(accessToken))
         {
-            throw new Exception("User is not logged in.");
+            await LogoutAsync();
+            throw new Exception("Session expired.");
         }
 
         var response = await SendRequestAsync(
@@ -35,19 +37,18 @@ public class ApiService
             accessToken,
             body);
 
-      
-        if (response.StatusCode ==
-            System.Net.HttpStatusCode.Unauthorized)
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
             var refreshed = await RefreshTokenAsync();
 
             if (!refreshed)
             {
+                await LogoutAsync();
+
                 throw new Exception(
                     "Session expired. Please login again.");
             }
 
-          
             accessToken =
                 await SecureStorage.Default
                     .GetAsync("accessToken");
@@ -104,16 +105,11 @@ public class ApiService
             request);
 
         if (!response.IsSuccessStatusCode)
-        {
-            SecureStorage.Default.Remove("accessToken");
-            SecureStorage.Default.Remove("refreshToken");
-            SecureStorage.Default.Remove("userId");
-
             return false;
-        }
 
-        var result = await response.Content
-            .ReadFromJsonAsync<LoginResponse>();
+        var result =
+            await response.Content
+                .ReadFromJsonAsync<LoginResponse>();
 
         if (result == null ||
             string.IsNullOrEmpty(result.AccessToken))
@@ -133,5 +129,14 @@ public class ApiService
         }
 
         return true;
+    }
+
+    private async Task LogoutAsync()
+    {
+        SecureStorage.Default.Remove("accessToken");
+        SecureStorage.Default.Remove("refreshToken");
+        SecureStorage.Default.Remove("userId");
+
+        await Shell.Current.GoToAsync("//MainPage");
     }
 }

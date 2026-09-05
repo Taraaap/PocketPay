@@ -1,6 +1,5 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using PocketPay.Mobile.Services;
+﻿using PocketPay.Mobile.Services;
+
 namespace PocketPay.Mobile;
 
 public partial class SendMoneyPage : ContentPage
@@ -18,20 +17,23 @@ public partial class SendMoneyPage : ContentPage
     {
         base.OnAppearing();
 
-        var token = await SecureStorage.Default.GetAsync("accessToken");
+        var token = await SecureStorage.Default
+            .GetAsync("accessToken");
 
         if (string.IsNullOrEmpty(token))
         {
             await Shell.Current.GoToAsync("//MainPage");
         }
     }
+
     private async void OnSendMoneyClicked(
         object sender,
         EventArgs e)
     {
         try
         {
-            var walletNumber = WalletNumberEntry.Text?.Trim();
+            var walletNumber =
+                WalletNumberEntry.Text?.Trim();
 
             if (string.IsNullOrWhiteSpace(walletNumber))
             {
@@ -65,21 +67,6 @@ public partial class SendMoneyPage : ContentPage
                 return;
             }
 
-            var token = await SecureStorage.Default.GetAsync(
-                "accessToken");
-
-            if (string.IsNullOrEmpty(token))
-            {
-                await DisplayAlert(
-                    "Session Expired",
-                    "Please login again.",
-                    "OK");
-
-                await Shell.Current.GoToAsync("//MainPage");
-
-                return;
-            }
-
             var request = new
             {
                 receiverWalletNumber = walletNumber,
@@ -87,7 +74,9 @@ public partial class SendMoneyPage : ContentPage
             };
 
             var response = await _apiService.SendAsync(
-                HttpMethod.Post,"Wallet/transfer",request);
+                HttpMethod.Post,
+                "Wallet/transfer",
+                request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -106,6 +95,9 @@ public partial class SendMoneyPage : ContentPage
                 "Success",
                 $"Rs. {amount:N2} sent successfully.",
                 "OK");
+
+            WalletNumberEntry.Text = string.Empty;
+            AmountEntry.Text = string.Empty;
 
             await Shell.Current.GoToAsync("//HomePage");
         }
