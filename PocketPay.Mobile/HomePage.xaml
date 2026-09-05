@@ -63,7 +63,7 @@
                 Text="Send Money"
                 HeightRequest="50"
                 CornerRadius="10" 
-                Clicked="OnSendMoneyClicked"/>
+                 Clicked="OnSendMoneyClicked"/>
 
             <Button
                 Text="Transactions"

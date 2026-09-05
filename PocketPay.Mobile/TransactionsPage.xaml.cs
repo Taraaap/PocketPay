@@ -1,17 +1,18 @@
-﻿using System.Net.Http.Headers;
+﻿using PocketPay.Mobile.Services;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace PocketPay.Mobile;
 
 public partial class TransactionsPage : ContentPage
 {
-    private readonly HttpClient _httpClient;
+    private readonly ApiService _apiService;
 
     public TransactionsPage()
     {
         InitializeComponent();
 
-        _httpClient = new HttpClient();
+        _apiService = new ApiService();
     }
 
     protected override async void OnAppearing()
@@ -48,13 +49,9 @@ public partial class TransactionsPage : ContentPage
                 return;
             }
 
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue(
-                    "Bearer",
-                    token);
+           
 
-            var response = await _httpClient.GetAsync(
-                "https://localhost:7225/api/Wallet/transactions");
+            var response = await _apiService.SendAsync( HttpMethod.Get, "Wallet/transactions");
 
             if (!response.IsSuccessStatusCode)
             {

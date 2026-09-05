@@ -1,24 +1,25 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using PocketPay.Mobile.Services;
 
 namespace PocketPay.Mobile;
 
 public partial class HomePage : ContentPage
 {
-    private readonly HttpClient _httpClient;
+    private readonly ApiService _apiService;
 
     public HomePage()
     {
         InitializeComponent();
 
-        _httpClient = new HttpClient();
+        _apiService = new ApiService();
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        var token = await SecureStorage.Default.GetAsync("accessToken");
+        var token = await SecureStorage.Default
+            .GetAsync("accessToken");
 
         if (string.IsNullOrEmpty(token))
         {
@@ -29,48 +30,13 @@ public partial class HomePage : ContentPage
         await LoadWallet();
     }
 
-    private async void OnDepositClicked(
-    object sender,
-    EventArgs e)
-    {
-        await Shell.Current.GoToAsync("//DepositPage");
-    }
-
-    private async void OnSendMoneyClicked(
-    object sender,
-    EventArgs e)
-    {
-        await Shell.Current.GoToAsync("//SendMoneyPage");
-    }
-
-    private async void OnTransactionsClicked(
-    object sender,
-    EventArgs e)
-    {
-        await Shell.Current.GoToAsync("//TransactionsPage");
-    }
-
     private async Task LoadWallet()
     {
         try
         {
-            var token = await SecureStorage.Default.GetAsync("accessToken");
-
-            if (string.IsNullOrEmpty(token))
-            {
-                await DisplayAlert(
-                    "Error",
-                    "Login token not found.",
-                    "OK");
-
-                return;
-            }
-
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.GetAsync(
-                "https://localhost:7225/api/Wallet");
+            var response = await _apiService.SendAsync(
+                HttpMethod.Get,
+                "Wallet");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -103,9 +69,34 @@ public partial class HomePage : ContentPage
         }
     }
 
+    private async void OnDepositClicked(
+        object sender,
+        EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            "//DepositPage");
+    }
+
+    private async void OnSendMoneyClicked(
+        object sender,
+        EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            "//SendMoneyPage");
+    }
+
+
+    private async void OnTransactionsClicked(
+        object sender,
+        EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            "//TransactionsPage");
+    }
+
     private async void OnLogoutClicked(
-    object sender,
-    EventArgs e)
+        object sender,
+        EventArgs e)
     {
         bool confirm = await DisplayAlert(
             "Logout",
@@ -117,8 +108,8 @@ public partial class HomePage : ContentPage
             return;
 
         SecureStorage.Default.Remove("accessToken");
-        SecureStorage.Default.Remove("userId");
         SecureStorage.Default.Remove("refreshToken");
+        SecureStorage.Default.Remove("userId");
 
         await Shell.Current.GoToAsync("//MainPage");
     }
@@ -128,7 +119,8 @@ public class WalletResponse
 {
     public Guid Id { get; set; }
 
-    public string WalletNumber { get; set; } = string.Empty;
+    public string WalletNumber { get; set; }
+        = string.Empty;
 
     public decimal Balance { get; set; }
 

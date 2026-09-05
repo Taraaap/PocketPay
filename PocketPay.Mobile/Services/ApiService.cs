@@ -35,7 +35,7 @@ public class ApiService
             accessToken,
             body);
 
-        // Access token expired
+      
         if (response.StatusCode ==
             System.Net.HttpStatusCode.Unauthorized)
         {
@@ -47,7 +47,7 @@ public class ApiService
                     "Session expired. Please login again.");
             }
 
-            // Get new token
+          
             accessToken =
                 await SecureStorage.Default
                     .GetAsync("accessToken");
