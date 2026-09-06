@@ -77,6 +77,9 @@
 	  <MauiXaml Update="HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="RegisterPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="SendMoneyPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

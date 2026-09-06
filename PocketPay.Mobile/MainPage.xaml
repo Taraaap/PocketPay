@@ -53,10 +53,10 @@
                 HeightRequest="50"
                 CornerRadius="10" />
 
-            <Label
+            <Button
                 Text="Don't have an account? Register"
-                HorizontalOptions="Center"
-                TextColor="#2563EB" />
+                Clicked="OnRegisterClicked"
+                BackgroundColor="Transparent" />
 
         </VerticalStackLayout>
 

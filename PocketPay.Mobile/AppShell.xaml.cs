@@ -5,6 +5,26 @@ public partial class AppShell : Shell
     public AppShell()
     {
         InitializeComponent();
+
+        Routing.RegisterRoute(
+            nameof(RegisterPage),
+            typeof(RegisterPage));
+
+        Routing.RegisterRoute(
+            nameof(HomePage),
+            typeof(HomePage));
+
+        Routing.RegisterRoute(
+            nameof(DepositPage),
+            typeof(DepositPage));
+
+        Routing.RegisterRoute(
+            nameof(SendMoneyPage),
+            typeof(SendMoneyPage));
+
+        Routing.RegisterRoute(
+            nameof(TransactionsPage),
+            typeof(TransactionsPage));
     }
 
     public void ShowMenu()

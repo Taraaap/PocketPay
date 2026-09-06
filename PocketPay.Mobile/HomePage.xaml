@@ -22,7 +22,7 @@
                 Text="My Wallet"
                 FontSize="22"
                 FontAttributes="Bold"
-                TextColor="#374151" />
+                TextColor="#374151" /> 
 
             <Border
                 BackgroundColor="White"

@@ -13,6 +13,14 @@ public partial class MainPage : ContentPage
         _httpClient = new HttpClient();
     }
 
+    private async void OnRegisterClicked(
+    object sender,
+    EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            nameof(RegisterPage));
+    }
+
     private async void OnLoginClicked(object sender, EventArgs e)
     {
         try
