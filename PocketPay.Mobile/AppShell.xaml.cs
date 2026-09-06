@@ -6,4 +6,14 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
     }
+
+    public void ShowMenu()
+    {
+        FlyoutBehavior = FlyoutBehavior.Flyout;
+    }
+
+    public void HideMenu()
+    {
+        FlyoutBehavior = FlyoutBehavior.Disabled;
+    }
 }

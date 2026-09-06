@@ -83,6 +83,7 @@ public partial class MainPage : ContentPage
                     result.RefreshToken);
             }
 
+            ((AppShell)Shell.Current).ShowMenu();
 
             await Shell.Current.GoToAsync("//HomePage");
         }

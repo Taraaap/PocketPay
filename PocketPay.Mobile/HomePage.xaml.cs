@@ -110,7 +110,7 @@ public partial class HomePage : ContentPage
         SecureStorage.Default.Remove("accessToken");
         SecureStorage.Default.Remove("refreshToken");
         SecureStorage.Default.Remove("userId");
-
+        ((AppShell)Shell.Current).HideMenu();
         await Shell.Current.GoToAsync("//MainPage");
     }
 }
