@@ -84,6 +84,14 @@ public partial class MainPage : ContentPage
                 "userId",
                 result.UserId);
 
+            await SecureStorage.Default.SetAsync(
+                "fullName",
+                result.FullName);
+
+            await SecureStorage.Default.SetAsync(
+                "email",
+                result.Email);
+
             if (!string.IsNullOrEmpty(result.RefreshToken))
             {
                 await SecureStorage.Default.SetAsync(

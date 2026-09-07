@@ -32,13 +32,18 @@
     Route="TransactionsPage" />
 
     <ShellContent
- Title="Logout"
- ContentTemplate="{DataTemplate local:MainPage}"
- Route="MainPage" />
+     Title="Logout"
+     ContentTemplate="{DataTemplate local:MainPage}"
+     Route="MainPage" />
 
     <ShellContent
     Title="Login"
     ContentTemplate="{DataTemplate local:MainPage}"
     Route="MainPage" />
+
+    <ShellContent
+    Title="Account"
+    ContentTemplate="{DataTemplate local:AccountPage}"
+    Route="AccountPage" />
 
 </Shell>

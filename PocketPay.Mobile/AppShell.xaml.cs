@@ -25,6 +25,10 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(
             nameof(TransactionsPage),
             typeof(TransactionsPage));
+
+        Routing.RegisterRoute(
+            nameof(AccountPage),
+            typeof(AccountPage));
     }
 
     public void ShowMenu()
