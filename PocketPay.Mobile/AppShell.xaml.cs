@@ -29,6 +29,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(
             nameof(AccountPage),
             typeof(AccountPage));
+
+        HideMenu();
     }
 
     public void ShowMenu()
@@ -40,4 +42,21 @@ public partial class AppShell : Shell
     {
         FlyoutBehavior = FlyoutBehavior.Disabled;
     }
+
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+       
+        SecureStorage.Default.Remove("accessToken");
+        SecureStorage.Default.Remove("refreshToken");
+        SecureStorage.Default.Remove("userId");
+        SecureStorage.Default.Remove("fullName");
+        SecureStorage.Default.Remove("email");
+
+        HideMenu();
+
+      
+        await Shell.Current.GoToAsync("//MainPage");
+    }
+
+   
 }
