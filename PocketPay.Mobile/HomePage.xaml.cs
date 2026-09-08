@@ -37,6 +37,12 @@ public partial class HomePage : ContentPage
             var response = await _apiService.SendAsync(
                 HttpMethod.Get,
                 "Wallet");
+            var fullName = await SecureStorage.Default.GetAsync("fullName");
+
+            if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                FullNameLabel.Text = fullName;
+            }
 
             if (!response.IsSuccessStatusCode)
             {

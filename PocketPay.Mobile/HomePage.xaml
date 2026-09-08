@@ -12,17 +12,18 @@
             Spacing="20">
 
             <Label
-                Text="PocketPay"
-                FontSize="30"
+              Text="Welcome"
+                x:Name="FullNameLabel"
+                
+                FontSize="22"
                 FontAttributes="Bold"
-                HorizontalOptions="Center"
-                TextColor="#1F2937" />
+                TextColor="#374151" />
 
             <Label
                 Text="My Wallet"
                 FontSize="22"
                 FontAttributes="Bold"
-                TextColor="#374151" /> 
+                TextColor="#374151" />
 
             <Border
                 BackgroundColor="White"
