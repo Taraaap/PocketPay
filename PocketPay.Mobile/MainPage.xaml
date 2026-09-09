@@ -20,7 +20,7 @@
                 TextColor="#1F2937" />
 
             <Label
-                Text="Welcome Back 👋"
+                Text="Welcome "
                 FontSize="22"
                 HorizontalOptions="Center"
                 TextColor="#4B5563" />
@@ -34,7 +34,8 @@
                 x:Name="EmailEntry"
                 Placeholder="Enter your email"
                 Keyboard="Email"
-                BackgroundColor="White" />
+                BackgroundColor="White"
+                  TextColor="black"/>
 
             <Label
                 Text="Password"
@@ -45,7 +46,8 @@
                 x:Name="PasswordEntry"
                 Placeholder="Enter your password"
                 IsPassword="True"
-                BackgroundColor="White" />
+                BackgroundColor="White"
+                TextColor="black"/>
 
             <Button
                 Text="LOGIN"

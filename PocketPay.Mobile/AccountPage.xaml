@@ -4,79 +4,82 @@
     x:Class="PocketPay.Mobile.AccountPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F5F7FA"
     Title="Account">
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30"
+            Padding="25"
             Spacing="20">
 
             <Label
                 Text="My Account"
-                FontSize="32"
+                FontSize="30"
                 FontAttributes="Bold"
-                HorizontalOptions="Center" />
+                TextColor="#1F2937" />
 
             <Border
-                Padding="20"
-                StrokeShape="RoundRectangle 15">
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="25">
 
-                <VerticalStackLayout
-                    Spacing="15">
+                <VerticalStackLayout Spacing="15">
 
                     <Label
                         Text="Full Name"
-                        FontSize="14" />
+                        FontSize="14"
+                        TextColor="#6B7280" />
 
                     <Label
                         x:Name="FullNameLabel"
+                        Text="Loading..."
                         FontSize="20"
-                        FontAttributes="Bold" />
+                        FontAttributes="Bold"
+                        TextColor="#111827" />
 
-                    <BoxView
-                        HeightRequest="1" />
+                    <BoxView HeightRequest="1" />
 
                     <Label
                         Text="Email"
-                        FontSize="14" />
+                        FontSize="14"
+                        TextColor="#6B7280" />
 
                     <Label
                         x:Name="EmailLabel"
-                        FontSize="18" />
+                        Text="Loading..."
+                        FontSize="18"
+                        TextColor="#111827" />
 
-                    <BoxView
-                        HeightRequest="1" />
+                    <BoxView HeightRequest="1" />
 
                     <Label
                         Text="Wallet Number"
-                        FontSize="14" />
+                        FontSize="14"
+                        TextColor="#6B7280" />
 
                     <Label
                         x:Name="WalletNumberLabel"
+                        Text="Loading..."
                         FontSize="18"
-                        FontAttributes="Bold" />
+                        TextColor="#111827" />
 
-                    <BoxView
-                        HeightRequest="1" />
+                    <BoxView HeightRequest="1" />
 
                     <Label
-                        Text="Available Balance"
-                        FontSize="14" />
+                        Text="Balance"
+                        FontSize="14"
+                        TextColor="#6B7280" />
 
                     <Label
                         x:Name="BalanceLabel"
-                        FontSize="22"
-                        FontAttributes="Bold" />
+                        Text="Loading..."
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        TextColor="#111827" />
 
                 </VerticalStackLayout>
 
             </Border>
-
-            <Button
-                Text="Logout"
-                FontSize="18"
-                HeightRequest="55"
-                Clicked="OnLogoutClicked" />
 
         </VerticalStackLayout>
     </ScrollView>

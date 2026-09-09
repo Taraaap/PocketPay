@@ -1,6 +1,5 @@
-﻿using PocketPay.Mobile.Services;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using PocketPay.Mobile.Services;
 
 namespace PocketPay.Mobile;
 
@@ -19,7 +18,8 @@ public partial class TransactionsPage : ContentPage
     {
         base.OnAppearing();
 
-        var token = await SecureStorage.Default.GetAsync("accessToken");
+        var token = await SecureStorage.Default
+            .GetAsync("accessToken");
 
         if (string.IsNullOrEmpty(token))
         {
@@ -34,24 +34,9 @@ public partial class TransactionsPage : ContentPage
     {
         try
         {
-            var token = await SecureStorage.Default.GetAsync(
-                "accessToken");
-
-            if (string.IsNullOrEmpty(token))
-            {
-                await DisplayAlert(
-                    "Session Expired",
-                    "Please login again.",
-                    "OK");
-
-                await Shell.Current.GoToAsync("//MainPage");
-
-                return;
-            }
-
-           
-
-            var response = await _apiService.SendAsync( HttpMethod.Get, "Wallet/transactions");
+            var response = await _apiService.SendAsync(
+                HttpMethod.Get,
+                "Wallet/transactions");
 
             if (!response.IsSuccessStatusCode)
             {

@@ -18,8 +18,8 @@ public partial class AccountPage : ContentPage
     {
         base.OnAppearing();
 
-        var token =
-            await SecureStorage.Default.GetAsync("accessToken");
+        var token = await SecureStorage.Default
+            .GetAsync("accessToken");
 
         if (string.IsNullOrEmpty(token))
         {
@@ -34,13 +34,21 @@ public partial class AccountPage : ContentPage
     {
         try
         {
-            var fullName =
-                await SecureStorage.Default.GetAsync("fullName");
+            var fullName = await SecureStorage.Default
+                .GetAsync("fullName");
 
-            if (!string.IsNullOrWhiteSpace(fullName))
-            {
-                FullNameLabel.Text = fullName;
-            }
+            var email = await SecureStorage.Default
+                .GetAsync("email");
+
+            FullNameLabel.Text =
+                string.IsNullOrWhiteSpace(fullName)
+                    ? "Unknown"
+                    : fullName;
+
+            EmailLabel.Text =
+                string.IsNullOrWhiteSpace(email)
+                    ? "Unknown"
+                    : email;
 
             var response = await _apiService.SendAsync(
                 HttpMethod.Get,
@@ -50,7 +58,7 @@ public partial class AccountPage : ContentPage
             {
                 await DisplayAlert(
                     "Error",
-                    "Unable to load account information.",
+                    "Unable to load wallet information.",
                     "OK");
 
                 return;
@@ -67,14 +75,6 @@ public partial class AccountPage : ContentPage
                 BalanceLabel.Text =
                     $"Rs. {wallet.Balance:N2}";
             }
-
-            var email =
-                await SecureStorage.Default.GetAsync("email");
-
-            if (!string.IsNullOrWhiteSpace(email))
-            {
-                EmailLabel.Text = email;
-            }
         }
         catch (Exception ex)
         {
@@ -83,29 +83,5 @@ public partial class AccountPage : ContentPage
                 ex.Message,
                 "OK");
         }
-    }
-
-    private async void OnLogoutClicked(
-        object sender,
-        EventArgs e)
-    {
-        bool confirm = await DisplayAlert(
-            "Logout",
-            "Are you sure you want to logout?",
-            "Yes",
-            "No");
-
-        if (!confirm)
-            return;
-
-        SecureStorage.Default.Remove("accessToken");
-        SecureStorage.Default.Remove("refreshToken");
-        SecureStorage.Default.Remove("userId");
-        SecureStorage.Default.Remove("fullName");
-        SecureStorage.Default.Remove("email");
-
-        ((AppShell)Shell.Current).HideMenu();
-
-        await Shell.Current.GoToAsync("//MainPage");
     }
 }

@@ -4,61 +4,112 @@
     x:Class="PocketPay.Mobile.TransactionsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Transactions">
+    Title="Transactions"
+    BackgroundColor="#F5F7FA">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <VerticalStackLayout
+        Padding="20"
+        Spacing="15">
 
         <Label
             Text="Transaction History"
             FontSize="30"
-            FontAttributes="Bold" />
+            FontAttributes="Bold"
+            TextColor="#1F2937" />
 
         <CollectionView
-            x:Name="TransactionsList">
+            x:Name="TransactionsList"
+            SelectionMode="None">
 
             <CollectionView.EmptyView>
-                <Label
-                    Text="No transactions yet."
-                    HorizontalOptions="Center"
+                <VerticalStackLayout
                     VerticalOptions="Center"
-                    FontSize="18" />
+                    HorizontalOptions="Center"
+                    Spacing="10">
+
+                    <Label
+                        Text="No transactions yet."
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        TextColor="#6B7280" />
+
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
 
                     <Border
+                        BackgroundColor="White"
                         Padding="15"
                         Margin="0,5"
-                        StrokeShape="RoundRectangle 12">
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0">
 
                         <Grid
-                            ColumnDefinitions="*,Auto"
-                            RowDefinitions="Auto,Auto">
+                            ColumnDefinitions="55,*,Auto"
+                            RowDefinitions="Auto,Auto,Auto"
+                            ColumnSpacing="12"
+                            RowSpacing="5">
+
+                           
+                            <Border
+                                Grid.RowSpan="3"
+                                WidthRequest="45"
+                                HeightRequest="45"
+                                StrokeShape="RoundRectangle 22"
+                                BackgroundColor="#F3F4F6"
+                                VerticalOptions="Center">
+
+                                <Label
+                                    Text="{Binding Type}"
+                                    FontSize="18"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+
+                            </Border>
 
                             <Label
+                                Grid.Column="1"
                                 Text="{Binding Type}"
                                 FontSize="17"
-                                FontAttributes="Bold" />
+                                FontAttributes="Bold"
+                                TextColor="#111827" />
 
+                           
                             <Label
+                                Grid.Column="1"
                                 Grid.Row="1"
                                 Text="{Binding Status}"
-                                FontSize="13" />
+                                FontSize="13"
+                                TextColor="#6B7280" />
 
+                          
                             <Label
                                 Grid.Column="1"
+                                Grid.Row="2"
+                                Text="{Binding Reference, StringFormat='Ref: {0}'}"
+                                FontSize="11"
+                                TextColor="#9CA3AF" />
+
+                            <Label
+                                Grid.Column="2"
                                 Text="{Binding Amount, StringFormat='Rs. {0:N2}'}"
-                                FontSize="18"
+                                FontSize="17"
                                 FontAttributes="Bold"
-                                HorizontalOptions="End" />
+                                HorizontalOptions="End"
+                                TextColor="#111827" />
 
+                           
                             <Label
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Grid.Row="1"
+                                Grid.RowSpan="2"
                                 Text="{Binding CreatedAt, StringFormat='{0:dd MMM yyyy, hh:mm tt}'}"
-                                FontSize="12"
-                                HorizontalOptions="End" />
+                                FontSize="11"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                TextColor="#6B7280" />
 
                         </Grid>
 
@@ -71,6 +122,8 @@
 
         <Button
             Text="Back to Wallet"
+            HeightRequest="50"
+            CornerRadius="10"
             Clicked="OnBackClicked" />
 
     </VerticalStackLayout>
